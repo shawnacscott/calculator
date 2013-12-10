@@ -1,7 +1,8 @@
 require 'minitest/autorun'
 require './calculator.rb'
 
-describe Calculator, "calculate simple expressions" do
+describe Calculator, 'calculate simple expressions' do
+
   before do
     @calc = Calculator.new
   end
@@ -30,10 +31,15 @@ describe Calculator, "calculate simple expressions" do
     end
   end
 
-  describe 'numbers return floats or integers appropriately' do
+  describe 'appropriate output' do
+
     it 'should return precise results for fractional math' do
       @calc.calculate('3/4').must_equal 3.0/4.0
       @calc.calculate('4/2').must_equal 4.0/2.0
+    end
+
+    it 'should not raise an exception for bad input' do
+      @calc.calculate('invalid input!').must_equal "ArgumentError: invalid expression 'invalid input!'"
     end
   end
 end
