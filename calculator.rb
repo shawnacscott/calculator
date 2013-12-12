@@ -10,22 +10,17 @@ class Calculator
       opr = match.to_s
       set_num_type(num_1.send(opr, num_2))
     else
-      rescue_bad_input(raw_input)
+      raise ArgumentError, "ArgumentError: invalid expression '#{raw_input}'"
     end
   end
 
-  def rescue_bad_input(raw_input)
-    begin
-      raise ArgumentError
-    rescue ArgumentError
-      print "ArgumentError: invalid expression '#{raw_input}'"
+  def set_num_type(float_value)
+    if float_value.infinite? || float_value.nan?
+      return float_value
+    else
+      as_int = float_value.to_i
+      return as_int == float_value ? as_int : float_value
     end
-  end
-
-  def set_num_type(number_str)
-    as_int = number_str.to_i
-    as_float = number_str.to_f
-    as_int == as_float ? as_int : as_float
   end
 
   def build_char_regexp(chars)
@@ -36,13 +31,18 @@ end
 
 if __FILE__ == $0
   calc = Calculator.new
-  input = true
-  while input do
-    input = gets.chomp
-    if input == 'exit'
-      break
-    else
-      puts calc.calculate(input)
+  while true do
+    begin
+      input = gets.chomp
+      if input == 'exit'
+        break
+      elsif input == ''
+        next
+      else
+        puts calc.calculate(input)
+      end
+    rescue ArgumentError => e
+      puts e.message
     end
   end
 end

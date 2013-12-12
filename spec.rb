@@ -38,8 +38,16 @@ describe Calculator, 'calculate simple expressions' do
       @calc.calculate('4/2').must_equal 4.0/2.0
     end
 
-    it 'should not raise an exception for bad input' do
-      @calc.calculate('invalid input!').must_equal "ArgumentError: invalid expression 'invalid input!'"
+    it 'should raise an exception for bad input' do
+      calc_invalid = lambda { @calc.calculate('invalid input!') }
+      calc_invalid.must_raise ArgumentError
+    end
+
+    it 'should return appropriate values for edge cases' do
+      @calc.calculate('1/0').must_equal Float::INFINITY
+      @calc.calculate('1.0/0.0').must_equal Float::INFINITY
+      @calc.calculate('0/0').nan?.must_equal true
+      @calc.calculate('0.0/0.0').nan?.must_equal true
     end
   end
 end
